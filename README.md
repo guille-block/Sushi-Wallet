@@ -1,7 +1,7 @@
 # Sushi wallet implementation
 
 ## Background
-This project demonstrates a basic use case for creating wallets that can interact with sushiswap efficiently. The main functionality radicates in the abilitiy to provide liquidity to any pool and automatically deposit the SLP tokens received into either MasterchefV1 or MasterchefV2 all in one transaction. At the same time, it also handles all basic wallet core functionalities. Any EOA can create a wallet through the sushi wallet factory and have competely control over it.
+This project demonstrates a basic use case for creating wallets that can interact with sushiswap efficiently. The main functionality radicates in the abilitiy to provide liquidity to any pool and automatically deposit the SLP tokens received into either MasterchefV1 or MasterchefV2 all in one transaction. At the same time, it also handles all basic wallet core functionalities. Any address can create a wallet through the sushi wallet factory and have competely control over it.
 
 ## Usage
 
