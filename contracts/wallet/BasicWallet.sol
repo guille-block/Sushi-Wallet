@@ -1,7 +1,7 @@
 pragma solidity >=0.8.0;
 
 contract BasicWallet {
-    address private owner;
+    address public owner;
     uint private balance;
 
    modifier onlyOwner() {
@@ -10,7 +10,7 @@ contract BasicWallet {
     }
 
     function initWallet() internal {
-        owner = msg.sender;
+        owner = tx.origin;
         balance = 0;
     }
 
