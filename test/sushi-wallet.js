@@ -26,7 +26,7 @@ const setWalletWithERC20Tokens = async (erc20Factory, receiver) => {
         let token = await erc20Factory.attach(tokensToProviders[i].token) 
         let impersonatedTokenInstance = await token.connect(impersonateAccount)
         let tokenBalanceImpersonated = await impersonatedTokenInstance.balanceOf(impersonateAccount.address)
-        //check if it needs some ether to transfer the amounts
+        //Check if it needs some ether to transfer the amounts
         let ethBalance = await ethers.provider.getBalance(impersonateAccount.address)
         
         if(ethBalance == 0) {
@@ -63,7 +63,7 @@ describe('Sushi Wallet Tests', function () {
         this.deployerWalletAddress = await this.walletCloneFactory.userToWallet(deployer.address)
 
         this.sushiWallets = await ethers.getContractFactory('SushiWallet', deployer)
-
+        //Sushi wallet connected to its owner
         this.deployerSushiWallet = await this.sushiWallets.attach(this.deployerWalletAddress)
         
         await setWalletWithERC20Tokens(this.erc20, this.deployerSushiWallet.address)
@@ -82,20 +82,21 @@ describe('Sushi Wallet Tests', function () {
         expect(await ethers.provider.getBalance(this.deployerSushiWallet.address)).to.be.equal(0)
     })
 
+    //ETH transfer
+    it('Sushi wallet transfer ETH correctly', async function () {
+        await this.deployerSushiWallet.deposit({value: ethers.utils.parseEther('1')})
+        await this.deployerSushiWallet.transferETHAmount(outsider.address, ethers.utils.parseEther('1'))
+        expect(await ethers.provider.getBalance(outsider.address)).to.be.greaterThan(ethers.utils.parseEther('1'))
+    })
+
     //Only owner
     it('Sushi wallet can only be operated by owner (deposit/receive/fallback functions excluded)', async function () {
         await this.deployerSushiWallet.deposit({value: ethers.utils.parseEther('1')})
         let outsiderSushiWalletInstance = await this.deployerSushiWallet.connect(outsider)
-
-        await ethers.provider.send("hardhat_setBalance", [
-            outsider.address,
-            "0x1208925819614629174706176", // 10 ETH
-        ])
-
         expect(outsiderSushiWalletInstance.withdraw(ethers.utils.parseEther('1'))).to.be.revertedWith("Only the owner can perform this action")
     })
 
-    //sushi wallet has received funds from impersonated providers correctly (internal test)
+    //Sushi wallet has received funds from impersonated providers correctly (internal test)
     it('Sushi wallet has a positive amount of ERC20 funds', async function () {
         for(let i = 0; i<tokensToProviders.length;i++) {
             let token = await this.erc20.attach(tokensToProviders[i].token) 
@@ -113,7 +114,7 @@ describe('Sushi Wallet Tests', function () {
         let CVXBalance = await CVX.balanceOf(this.deployerSushiWallet.address)
         let pairAvailableAmount = this.wethBalance.div(2) > CVXBalance ? CVXBalance : this.wethBalance.div(2)
         
-        //transaction that handles Liquidity providing and yield farming
+        //Transaction that handles Liquidity providing and yield farming
         await this.deployerSushiWallet.executeYieldFarming(
             process.env.CVX,
             process.env.WETH,
@@ -128,7 +129,7 @@ describe('Sushi Wallet Tests', function () {
         let usdc = await this.erc20.attach(process.env.USDC) 
         let usdcBalance = await usdc.balanceOf(this.deployerSushiWallet.address)
          
-        //transaction that handles Liquidity providing and yield farming
+        //Transaction that handles Liquidity providing and yield farming
         await this.deployerSushiWallet.executeYieldFarming(
             process.env.USDC,
             process.env.WETH,
