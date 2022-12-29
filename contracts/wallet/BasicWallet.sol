@@ -31,7 +31,7 @@ contract BasicWallet {
         require(msg.sender == owner, "Only owner can transfer funds from the wallet.");
         require(amount > 0, "Cannot withdraw zero or negative value.");
         require(amount <= balance, "Insufficient balance.");
-        payable(to).transfer(amount); // transfer instead of a call to only forward 2100 units of gas
+        payable(to).transfer(amount); // transfer instead of a call to only forward 21000 units of gas
         balance -= amount;
     }
 
