@@ -8,8 +8,8 @@ This project demonstrates a basic use case for creating wallets that can interac
 Copy the project and install its dependendies.
 
 ```
-git clone https://github.com/guille-block/rather-labs-challenge.git
-cd rather-labs-challenge
+git clone https://github.com/guille-block/sushi-wallet.git
+cd sushi-wallet
 npm install
 ```
 
